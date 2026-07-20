@@ -26,3 +26,5 @@ testing/permission_644  644  ZN  ZN
 ## Error handling testy
 python3 auditor.py /neexistujuca/cesta        —    hláška + exit 1    error test: neexistujúca cesta
 python3 auditor.py testing/ww_466             —    hláška + exit 1    error test: súbor namiesto adresára
+
+7 - WW
