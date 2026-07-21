@@ -7,11 +7,9 @@ WW_TARGETS = [2, 3, 6, 7]
 
 def main():
     starting_path = get_args()
-    ww_report, ssh_report = walk_through(starting_path)
-    for key, values in ww_report.items():
-        print(key, values)
-    for key, values in ssh_report.items():
-        print(key, values, 'ssh')
+    ww_report, ssh_report, files_scanned, permission_error = walk_through(starting_path)
+    print_result(ww_report=ww_report, ssh_report=ssh_report, files_scanned=files_scanned,permission_error=permission_error)
+
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -23,8 +21,10 @@ def walk_through(path):
     ww_report={}
     ssh_report = {}
     files_scanned = 0
+    permission_error = 0
     try:
         for (root, dirs, files) in os.walk(path, topdown=True):
+            print(root, dirs, files)
             for i in files:
                 full_path = os.path.join(root, i)
                 oct_num = octal_num(full_path)
@@ -35,12 +35,12 @@ def walk_through(path):
                    check_permission(oct_num,full_path, ww_report)
 
         
-        return ww_report, ssh_report
+        return ww_report, ssh_report, files_scanned, permission_error
     except FileNotFoundError:
         print(f"Folder {full_path} doesn't exist or you dont have")
         sys.exit(1)
     except PermissionError:
-        print("PermissionError")
+        permission_error +=1
     
 
 
@@ -64,4 +64,26 @@ def ssh_permission(oct_num, path, ssh_report):
         ssh_report[path] = oct_num
 
     return ssh_report
+
+def print_result(ssh_report, ww_report, files_scanned, permission_error):
+    print(f"=== WORLD-WRITABLE FILES ({len(ww_report)}) === \n")
+    for key, value in ww_report.items():
+        print(f"{key} ({value})")
+    
+    print("\n")
+
+    print(f"=== UNSAFE SSH FILES ({len(ssh_report)}) === \n")
+    for key,value in ssh_report.items():
+        print(f"{key} ({value})")
+
+    print("\n")
+
+    print("=== SUMMARY === \n")
+    print(f"Files scanned: {files_scanned}")
+    print(f"Findings: {len(ssh_report) + len(ww_report)}")
+    print(f"Skipped (no access): {permission_error}")
+
 main()
+
+
+### nefunkcny permission
