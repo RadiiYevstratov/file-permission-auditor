@@ -17,14 +17,27 @@ def get_args():
     args = parser.parse_args()
     return args.path
 
+
+
+
 def walk_through(path):
     ww_report={}
     ssh_report = {}
     files_scanned = 0
     permission_error = 0
+
+    def walk_error(error):
+        nonlocal permission_error
+        
+        if isinstance(error, PermissionError):
+            permission_error +=1
+
+        if isinstance(error, FileNotFoundError):
+            print(f"Folder {path} doesn't exist.")
+            sys.exit(1)
+
     try:
-        for (root, dirs, files) in os.walk(path, topdown=True):
-            print(root, dirs, files)
+        for (root, dirs, files) in os.walk(path, topdown=True, onerror=walk_error):
             for i in files:
                 full_path = os.path.join(root, i)
                 oct_num = octal_num(full_path)
@@ -37,10 +50,8 @@ def walk_through(path):
         
         return ww_report, ssh_report, files_scanned, permission_error
     except FileNotFoundError:
-        print(f"Folder {full_path} doesn't exist or you dont have")
+        print(f"Folder {path} doesn't exist or you dont have")
         sys.exit(1)
-    except PermissionError:
-        permission_error +=1
     
 
 
@@ -87,3 +98,4 @@ main()
 
 
 ### nefunkcny permission
+### /home/lenovo/testing
