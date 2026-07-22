@@ -1,5 +1,3 @@
-Chybu som opravil. Dufam ze nemusim posielat cely kod len kvoli tomu ze som posunul riadok o par medzier. Tu je README.md:# File Permission Auditor
-
 The **File Permission Auditor** is a Python command-line tool that scans a directory and analyzes Linux file permissions to identify common security misconfigurations.
 
 It focuses on detecting:
