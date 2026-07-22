@@ -1,72 +1,115 @@
-# File Permission Auditor
+Chybu som opravil. Dufam ze nemusim posielat cely kod len kvoli tomu ze som posunul riadok o par medzier. Tu je README.md:# File Permission Auditor
 
-The **File Permission Auditor** scans directories and analyzes Linux file permissions to help identify files and directories with potentially insecure permission settings.
+The **File Permission Auditor** is a Python command-line tool that scans a directory and analyzes Linux file permissions to identify common security misconfigurations.
 
-It is designed as a simple security auditing tool that highlights world-writable files and directories while also reporting permission-related errors encountered during the scan.
+It focuses on detecting:
+
+- **World-writable files**, which can be modified by any user.
+
+- **Insecure SSH files** inside `.ssh` directories that have permissions more permissive than recommended.
 
 ## Features
 
-- Recursively scans directories and subdirectories.
+- Recursively scans all files inside a directory.
+
 - Detects world-writable files.
-- Detects world-writable directories.
+
+- Checks SSH-related files for unsafe permissions.
+
 - Counts the total number of scanned files.
+
 - Reports permission errors encountered during scanning.
-- Generates a clear audit summary.
+
+- Generates a summary of all findings.
 
 ## How It Works
 
-The application recursively walks through the specified directory using Python's built-in file system functions.
+The application recursively traverses the specified directory using `os.walk()`.
 
-For every file and directory, it reads the permission bits and checks whether they are writable by everyone (world-writable). During the scan, it also handles inaccessible files or directories and counts any permission-related errors instead of stopping the program.
+For every file it:
 
-After the scan is complete, the tool prints a summary containing:
-- Total scanned files
-- Number of world-writable files
-- Number of world-writable directories
-- Number of permission errors
+1. Reads the file's permission bits using `os.stat()`.
+
+2. Converts the permissions to octal format.
+
+3. Determines whether the file is:
+
+   - world-writable (write permission for "others"), or
+
+   - located inside a `.ssh` directory with permissions that allow access to the group or other users.
+
+4. Stores every finding and prints a report after the scan finishes.
+
+If the program encounters directories it cannot access, it counts the permission errors and continues scanning instead of terminating.
 
 ## Problem It Solves
 
-Incorrect file permissions are one of the most common Linux security misconfigurations. Files or directories that are writable by every user can allow unauthorized modification, accidental deletion, or privilege escalation.
+Incorrect Linux file permissions are a common security issue.
 
-This tool helps administrators, students, and cybersecurity learners quickly identify potentially insecure permissions and gain better visibility into the security of a Linux file system.
+World-writable files can allow unauthorized users to modify data, while overly permissive SSH files may expose private keys or prevent SSH from accepting the files due to insecure permissions.
+
+This tool provides a quick way to audit a directory and identify files that may require permission changes.
 
 ## Usage
 
 ```bash
-python3 main.py <directory_path>
+
+python3 auditor.py <directory_path>
+
 ```
 
 ### Arguments
 
 | Argument | Description |
+
 |----------|-------------|
-| `directory_path` | Path to the directory that should be scanned |
+
+| `directory_path` | Path to the directory that will be scanned |
 
 ## Example
 
 ```bash
+
 python3 main.py /home/user
+
 ```
 
 ### Example Output
 
+```text
+
+=== WORLD-WRITABLE FILES (2) ===
+
+/home/user/public/file.txt (666)
+
+/var/tmp/demo.log (666)
+
+=== UNSAFE SSH FILES (1) ===
+
+/home/user/.ssh/id_rsa (644)
+
+=== SUMMARY ===
+
+Files scanned: 1524
+
+Findings: 3
+
+Skipped (no access): 2
+
 ```
-========== File Permission Audit ==========
-Directory: /home/user
 
-Files scanned: 1824
-World-writable files: 4
-World-writable directories: 2
-Permission errors: 3
+## What I Learned
 
-World-writable files:
-- /home/user/shared/test.txt
-- /home/user/public/data.log
-- /var/tmp/example.txt
-- /tmp/demo.txt
+This project helped me improve my understanding of:
 
-World-writable directories:
-- /home/user/shared
-- /tmp/demo
-```
+- Linux file permissions (`rwx` and octal notation)
+
+- Recursive file system traversal with `os.walk()`
+
+- File metadata using `os.stat()`
+
+- Handling `PermissionError` exceptions
+
+- Building command-line applications with `argparse`
+
+- Writing simple security auditing tools in Python

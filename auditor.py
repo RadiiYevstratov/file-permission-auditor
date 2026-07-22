@@ -34,7 +34,7 @@ def walk_through(path):
 
     if not os.path.isdir(path):
         print(f"Error: '{path}' is not a directory or does not exist.", file=sys.stderr)
-    sys.exit(1)
+        sys.exit(1)
     for (root, dirs, files) in os.walk(path, topdown=True, onerror=walk_error):
         for i in files:
             full_path = os.path.join(root, i)
