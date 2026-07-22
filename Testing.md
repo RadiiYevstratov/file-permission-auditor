@@ -19,6 +19,7 @@ testing/.ssh/id_test2                      600                 ZN               
 testing/.ssh/id_test3                      466                 UK                               Typ B
 testing/.ssh/id_test4                      604                 UK                              Typ B
 testing/.ssh/id_test5                      640                 UK                              Typ B
+testing/.ssh/id_test6                      700                 ZN                              Typ B
 testing/ww_466                                      466                 WW                           Typ A
 testing/not_allowed                       000                 skipped                   missing permission
 testing/permission_644  644  ZN  ZN
