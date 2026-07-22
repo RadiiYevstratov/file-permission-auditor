@@ -89,7 +89,7 @@ def print_result(ssh_report, ww_report, files_scanned, permission_error):
     print(f"Skipped (no access): {permission_error}")
 
 
-
-main()
+if __name__ == "__main__":
+    main()
 
 
