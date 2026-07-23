@@ -95,19 +95,3 @@ Findings: 3
 Skipped (no access): 2
 
 ```
-
-## What I Learned
-
-This project helped me improve my understanding of:
-
-- Linux file permissions (`rwx` and octal notation)
-
-- Recursive file system traversal with `os.walk()`
-
-- File metadata using `os.stat()`
-
-- Handling `PermissionError` exceptions
-
-- Building command-line applications with `argparse`
-
-- Writing simple security auditing tools in Python
